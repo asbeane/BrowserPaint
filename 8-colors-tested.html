@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+<title>Problem 8 - Color</title>
+</head>
+<body>
+<h1>Basic Paint Program!</h1>
+<p>This basic Painting Program is built in HTML Canvas. This uses jscolor.js from  <a href="http://jscolor.com">jscolor.com</a>
+<br>Instructions:<br>Left Click to Draw. Select Choose Brush Color, and point to
+   pixel of desired, click and it applies it to brush.
+   <br>Choose the Appropriate Button for the Square Brush, Circle Brush, or
+   Eraser.</p>
+Choose Brush Color: <input class="color" value="ffffff" id="colorChoice" onchange="'#'+this.color">
+<br>
+<button id="squareBrush" type="button">Square Brush</button>
+<button id="circleBrush" type="button">Circular Brush</button>
+<button id="eraser" type="button">Eraser</button>
+ <canvas id="canvas" width="1000" height="1000" style ="border:1px solid #c3c3c3;">
+	 Epic Fail Messages (Canvas)!!!
+ </canvas>
+<script src="jscolor.js"></script>
+<script src="8-colors-tested.js"></script>
+</body>
+</html>
