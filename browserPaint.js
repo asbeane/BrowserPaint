@@ -1,10 +1,7 @@
 /***************************************************
 * Author: Andrew Beane
 * Date: May 3, 2015
-* CGI Final - Problem 8 - Colors
-*
-*
-*
+* browserPaint.JS - Basic Paint Program using HTMl Canvas
 ****************************************************/
 // Approach
 /********************************************************************
