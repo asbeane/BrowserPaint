@@ -42,7 +42,7 @@ canvas.onmousedown = function(event)
 {
     paintOnCanvas = true;
     ctx.beginPath();
-    
+
     if (eraserTruth) {
         ctx.lineWidth = 20;
         ctx.strokeStyle = "#FFFFFF";
@@ -50,12 +50,7 @@ canvas.onmousedown = function(event)
         var color = String(choice.color);
         color = color.toUpperCase();
         ctx.strokeStyle = "#"+color;
-    }    
-    var x = event.clientX;
-    var y = event.clientY;
-    x -= canvas.offsetLeft;
-    y -= canvas.offsetTop;
-    ctx.moveTo(x, y);
+    }
 };
 
 canvas.onmouseup = function()
@@ -67,10 +62,9 @@ canvas.onmouseup = function()
 canvas.onmousemove = function(event)
 {
     if (paintOnCanvas){
-        var x = event.clientX;
-        var y = event.clientY;
-        x -= canvas.offsetLeft;
-        y -= canvas.offsetTop;
+        var canv = canvas.getBoundingClientRect();
+        var x = event.clientX - canv.left;
+        var y = event.clientY - canv.top;
         ctx.lineTo(x, y);
         ctx.stroke();
     }
