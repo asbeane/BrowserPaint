@@ -19,8 +19,19 @@ ctx.lineWidth = 10;
 var squarebrush = document.getElementById("squareBrush");
 var roundbrush = document.getElementById("circleBrush");
 var eraser = document.getElementById("eraser");
+var textBox = document.getElementById("textBox");
+var increase = document.getElementById("increase");
+var decrease = document.getElementById("decrease");
+var fill = document.getElementById("fillButton");
 
 var eraserTruth = false;
+
+fill.addEventListener("click", function() {
+    var color = String(choice.color);
+    color = color.toUpperCase();
+    ctx.fillStyle = "#"+color;
+    ctx.fillRect(0,0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+}, false)
 
 squarebrush.addEventListener("click", function() {
     eraserTruth = false;
@@ -35,7 +46,35 @@ roundbrush.addEventListener("click", function() {
 }, false)
 
 eraser.addEventListener("click", function() {
+    ctx.lineWidth = 20;
     eraserTruth = true;
+}, false)
+
+// TODO: Need to implement click and add text box, and choose font, size etc.
+textBox.addEventListener("click", function() {
+    var box = new CanvasInput({
+        canvas: canvas,
+        fontSize: 18,
+        fontFamily: 'Arial',
+        fontColor: '#212121',
+        fontWeight: 'bold',
+        width: 300,
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 3,
+        boxShadow: '1px 1px 0px #fff',
+        innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+        placeHolder: 'Enter message here...'
+    });
+}, false)
+
+increase.addEventListener("click", function() {
+    ctx.lineWidth += 2;
+}, false)
+
+decrease.addEventListener("click", function() {
+    ctx.lineWidth -= 2;
 }, false)
 
 canvas.onmousedown = function(event)
@@ -44,7 +83,6 @@ canvas.onmousedown = function(event)
     ctx.beginPath();
 
     if (eraserTruth) {
-        ctx.lineWidth = 20;
         ctx.strokeStyle = "#FFFFFF";
     } else {
         var color = String(choice.color);
