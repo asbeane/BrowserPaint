@@ -1,12 +1,9 @@
 /***************************************************
 * Author: Andrew Beane
-* Date: May 3, 2015
+* Original Date: May 3, 2015
+ * Edited Dat April 25, 2016
 * browserPaint.JS - Basic Paint Program using HTMl Canvas
 ****************************************************/
-// Approach
-/********************************************************************
-* Used Canvas and covered ALl points.
-********************************************************************/
 
 /************************MAIN AREA****************************/
 var canvas = document.getElementById("canvas");
@@ -25,11 +22,27 @@ var decrease = document.getElementById("decrease");
 var fill = document.getElementById("fillButton");
 
 var eraserTruth = false;
+//var open = false;
+
+function setColor(event) {
+    var color = String(choice.color);
+    var canv = canvas.getBoundingClientRect();
+    var x = event.clientX - canv.left;
+    var y = event.clientY - canv.top;
+    var pixels = ctx.getImageData(x,y,1,1).data;
+    var color = '#' + String(choice.color);
+    var finalColor = $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3]));
+    color = color.toUpperCase();
+    //ctx.fillStyle = finalColor.getHex();
+    return finalColor.getHex();
+}
 
 fill.addEventListener("click", function() {
     var color = String(choice.color);
+    var canv = canvas.getBoundingClientRect();
+    var color = '#' + String(choice.color);
     color = color.toUpperCase();
-    ctx.fillStyle = "#"+color;
+    ctx.fillStyle = color;
     ctx.fillRect(0,0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 }, false)
 
@@ -80,31 +93,53 @@ decrease.addEventListener("click", function() {
 canvas.onmousedown = function(event)
 {
     paintOnCanvas = true;
+    //if (!open) {
     ctx.beginPath();
+    //open = true;
+    //}
 
     if (eraserTruth) {
         ctx.strokeStyle = "#FFFFFF";
     } else {
-        var color = String(choice.color);
-        color = color.toUpperCase();
-        ctx.strokeStyle = "#"+color;
+        //var color = String(choice.color);
+        //color = color.toUpperCase();
+        //ctx.strokeStyle = "#"+color;
+        //ctx.strokeStyle = setColor(event);
     }
 };
 
-canvas.onmouseup = function()
-{
+canvas.onmouseup = function() {
     paintOnCanvas = false;
+    //if (open) {
     ctx.closePath();
+      //  open = false;
+    //}
 };
 
 canvas.onmousemove = function(event)
 {
-    if (paintOnCanvas){
+    if (paintOnCanvas) {
+        //ctx.beginPath();
+        //if (!open) {
+      //  open = true;
+    //    ctx.beginPath();
+        //}
         var canv = canvas.getBoundingClientRect();
         var x = event.clientX - canv.left;
         var y = event.clientY - canv.top;
+        ctx.strokeStyle = setColor(event);
         ctx.lineTo(x, y);
         ctx.stroke();
+        //ctx.closePath();
+        //open = false;
     }
 };
 
+function convertRGBToHexHelper(x) {
+    var hex = x.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function convertRGBToHex(r, g, b) {
+    return "#" + convertRGBToHexHelper(r) + convertRGBToHexHelper(g) + convertRGBToHexHelper(b);
+}
