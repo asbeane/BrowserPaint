@@ -8,6 +8,7 @@
 /************************MAIN AREA****************************/
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+//ctx.globalAlpha = 0.1;
 var choice = document.getElementById("colorChoice");
 var paintOnCanvas = false;
 
@@ -20,6 +21,8 @@ var textBox = document.getElementById("textBox");
 var increase = document.getElementById("increase");
 var decrease = document.getElementById("decrease");
 var fill = document.getElementById("fillButton");
+var save = document.getElementById("save");
+var restore = document.getElementById("restore");
 
 var eraserTruth = false;
 //var open = false;
@@ -29,22 +32,42 @@ function setColor(event) {
     var canv = canvas.getBoundingClientRect();
     var x = event.clientX - canv.left;
     var y = event.clientY - canv.top;
-    var pixels = ctx.getImageData(x,y,1,1).data;
+    var pixels = ctx.getImageData(x, y, 1, 1).data;
     var color = '#' + String(choice.color);
-    var finalColor = $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3]));
-    color = color.toUpperCase();
+
+    //var convertedColor = convertRGBToHex(pixels[0], pixels[1], pixels[3]);
+    var convertedColor = ctx.getImageData(x, y, 1, 1).data;
+    console.log($.xcolor.distance(color, convertedColor));
+    if ($.xcolor.distance(color, convertedColor) <= 100) {
+        return color;
+    }
+    else {
+        return $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3])).getHex();
+    }
+    //var finalColor = $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3]));
+    color = color.toUpperCase(); 
     //ctx.fillStyle = finalColor.getHex();
-    return finalColor.getHex();
+    //return color;
+    //return finalColor.getHex();
 }
 
+save.addEventListener("click", function() {
+    ctx.save();
+}, false);
+
+restore.addEventListener("click", function() {
+    ctx.restore();
+}, false);
+
 fill.addEventListener("click", function() {
+    //ctx.globalAlpha = 1.0;
     var color = String(choice.color);
     var canv = canvas.getBoundingClientRect();
-    var color = '#' + String(choice.color);
     color = color.toUpperCase();
-    ctx.fillStyle = color;
+    ctx.fillStyle = "#"+color;
     ctx.fillRect(0,0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-}, false)
+    //ctx.globalAlpha = 0.1;
+}, false);
 
 squarebrush.addEventListener("click", function() {
     eraserTruth = false;
@@ -56,12 +79,12 @@ roundbrush.addEventListener("click", function() {
     eraserTruth = false;
     ctx.lineWidth = 10;
     ctx.lineCap = "round";
-}, false)
+}, false);
 
 eraser.addEventListener("click", function() {
     ctx.lineWidth = 20;
     eraserTruth = true;
-}, false)
+}, false);
 
 // TODO: Need to implement click and add text box, and choose font, size etc.
 textBox.addEventListener("click", function() {
@@ -80,15 +103,15 @@ textBox.addEventListener("click", function() {
         innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
         placeHolder: 'Enter message here...'
     });
-}, false)
+}, false);
 
 increase.addEventListener("click", function() {
     ctx.lineWidth += 2;
-}, false)
+}, false);
 
 decrease.addEventListener("click", function() {
     ctx.lineWidth -= 2;
-}, false)
+}, false);
 
 canvas.onmousedown = function(event)
 {
@@ -101,9 +124,9 @@ canvas.onmousedown = function(event)
     if (eraserTruth) {
         ctx.strokeStyle = "#FFFFFF";
     } else {
-        //var color = String(choice.color);
-        //color = color.toUpperCase();
-        //ctx.strokeStyle = "#"+color;
+        var color = String(choice.color);
+        color = color.toUpperCase();
+        ctx.strokeStyle = "#"+color;
         //ctx.strokeStyle = setColor(event);
     }
 };
@@ -127,11 +150,12 @@ canvas.onmousemove = function(event)
         var canv = canvas.getBoundingClientRect();
         var x = event.clientX - canv.left;
         var y = event.clientY - canv.top;
-        ctx.strokeStyle = setColor(event);
+        //ctx.strokeStyle = setColor(event);
+        var color = String(choice.color);
+        color = color.toUpperCase();
+        ctx.strokeStyle = "#" + color;
         ctx.lineTo(x, y);
         ctx.stroke();
-        //ctx.closePath();
-        //open = false;
     }
 };
 

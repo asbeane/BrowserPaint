@@ -7,6 +7,8 @@ Uses jscolor.js from jscolor.com for the color picker.
 
 To draw or erase, must click, and hold, left mouse button.
 
-There is a square brush, round brush, eraser, fill, and increase and decrease thickness.
+There is a square brush, round brush, eraser, fill, and increase and decrease thickness, Save and Restore (WIP).
+
+TODO: Add modes for additive and subtractive color.
 
 
