@@ -23,8 +23,9 @@ var decrease = document.getElementById("decrease");
 var fill = document.getElementById("fillButton");
 var save = document.getElementById("save");
 var restore = document.getElementById("restore");
-
 var eraserTruth = false;
+var pixelState;
+
 //var open = false;
 
 function setColor(event) {
@@ -52,11 +53,15 @@ function setColor(event) {
 }
 
 save.addEventListener("click", function() {
-    ctx.save();
+    //ctx.save();
+    pixelState = ctx.getImageData(0,0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 }, false);
 
 restore.addEventListener("click", function() {
-    ctx.restore();
+    //ctx.restore();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    ctx.putImageData(pixelState,0,0);
 }, false);
 
 fill.addEventListener("click", function() {
@@ -133,27 +138,19 @@ canvas.onmousedown = function(event)
 
 canvas.onmouseup = function() {
     paintOnCanvas = false;
-    //if (open) {
     ctx.closePath();
-      //  open = false;
-    //}
 };
 
 canvas.onmousemove = function(event)
 {
     if (paintOnCanvas) {
-        //ctx.beginPath();
-        //if (!open) {
-      //  open = true;
-    //    ctx.beginPath();
-        //}
         var canv = canvas.getBoundingClientRect();
         var x = event.clientX - canv.left;
         var y = event.clientY - canv.top;
         //ctx.strokeStyle = setColor(event);
-        var color = String(choice.color);
-        color = color.toUpperCase();
-        ctx.strokeStyle = "#" + color;
+        //var color = String(choice.color);
+        //color = color.toUpperCase();
+        //ctx.strokeStyle = "#" + color;
         ctx.lineTo(x, y);
         ctx.stroke();
     }

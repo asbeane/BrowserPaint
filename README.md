@@ -12,3 +12,4 @@ There is a square brush, round brush, eraser, fill, and increase and decrease th
 TODO: Add modes for additive and subtractive color.
 
 
+
