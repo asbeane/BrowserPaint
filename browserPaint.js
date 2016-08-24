@@ -8,25 +8,36 @@
 /***** Include *******/
 //var bootstrap = require('bootstrap');
 
+/************************TODO's *******************************
+ *  Text Box
+ *  Incorporate
+ *
+ *
+ *
 /************************MAIN AREA****************************/
 $(document).ready(function() {
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
-    //ctx.globalAlpha = 0.1;
-    var choice = document.getElementById("colorChoice");
-    var paintOnCanvas = false;
+    var canvas                = document.getElementById("canvas");
+    var ctx                   = canvas.getContext("2d");
+    var choice                = document.getElementById("colorChoice");
+    var paintOnCanvas         = false;
+    var drawRectangle         = false;
+    var drawRectangleOnCanvas = false;
+    var onMouseDownX, onMouseDownY, onMouseMoveX, onMouseMoveY;
+
 
     ctx.lineWidth = 10;
 
     var squarebrush = document.getElementById("squareBrush");
-    var roundbrush = document.getElementById("circleBrush");
-    var eraser = document.getElementById("eraser");
-    var textBox = document.getElementById("textBox");
-    var increase = document.getElementById("increase");
-    var decrease = document.getElementById("decrease");
-    var fill = document.getElementById("fillButton");
-    var save = document.getElementById("save");
-    var restore = document.getElementById("restore");
+    var roundbrush  = document.getElementById("circleBrush");
+    var eraser      = document.getElementById("eraser");
+    var textBox     = document.getElementById("textBox");
+    var drawBox     = document.getElementById("drawBox");
+    var increase    = document.getElementById("increase");
+    var decrease    = document.getElementById("decrease");
+    var fill        = document.getElementById("fillButton");
+    var save        = document.getElementById("save");
+    var restore     = document.getElementById("restore");
+
     var eraserTruth = false;
     var pixelState;
 
@@ -49,11 +60,7 @@ $(document).ready(function() {
         else {
             return $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3])).getHex();
         }
-        //var finalColor = $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3]));
         color = color.toUpperCase();
-        //ctx.fillStyle = finalColor.getHex();
-        //return color;
-        //return finalColor.getHex();
     }
 
     save.addEventListener("click", function () {
@@ -79,15 +86,24 @@ $(document).ready(function() {
     }, false);
 
     squarebrush.addEventListener("click", function () {
+        drawRectangle = false;
         eraserTruth = false;
         ctx.lineWidth = 10;
         ctx.lineCap = "square";
     }, false)
 
     roundbrush.addEventListener("click", function () {
+        drawRectangle = false;
         eraserTruth = false;
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
+    }, false);
+
+    drawBox.addEventListener("click", function () {
+        paintOnCanvas = false;
+        eraserTruth = false;
+        drawRectangle = true;
+        ctx.lineWidth = 2;
     }, false);
 
     eraser.addEventListener("click", function () {
@@ -123,24 +139,34 @@ $(document).ready(function() {
     }, false);
 
     canvas.onmousedown = function (event) {
-        paintOnCanvas = true;
-        //if (!open) {
+        if (!drawRectangle) paintOnCanvas = true;
+        drawRectangleOnCanvas = true;
         ctx.beginPath();
-        //open = true;
-        //}
-
+        var canv = canvas.getBoundingClientRect();
+        onMouseDownX = event.clientX - canv.left;
+        onMouseDownY = event.clientY - canv.top;
         if (eraserTruth) {
             ctx.strokeStyle = "#FFFFFF";
         } else {
             var color = String(choice.color);
             color = color.toUpperCase();
             ctx.strokeStyle = "#" + color;
-            //ctx.strokeStyle = setColor(event);
         }
     };
 
-    canvas.onmouseup = function () {
+    canvas.onmouseup = function (event) {
         paintOnCanvas = false;
+        if (drawRectangle && drawRectangleOnCanvas)
+        {
+            drawRectangleOnCanvas = false;
+            ctx.moveTo(onMouseDownX, onMouseDownY);
+            ctx.lineTo(onMouseMoveX, onMouseDownY);
+            ctx.lineTo(onMouseMoveX, onMouseMoveY);
+            ctx.lineTo(onMouseDownX, onMouseMoveY);
+            ctx.lineTo(onMouseDownX, onMouseDownY);
+            ctx.stroke();
+            this.style.cursor = "pointer";
+        }
         ctx.closePath();
     };
 
@@ -149,12 +175,15 @@ $(document).ready(function() {
             var canv = canvas.getBoundingClientRect();
             var x = event.clientX - canv.left;
             var y = event.clientY - canv.top;
-            //ctx.strokeStyle = setColor(event);
-            //var color = String(choice.color);
-            //color = color.toUpperCase();
-            //ctx.strokeStyle = "#" + color;
             ctx.lineTo(x, y);
             ctx.stroke();
+        }
+        else if (drawRectangle && drawRectangleOnCanvas)
+        {
+            this.style.cursor = "crosshair";
+            var canv = canvas.getBoundingClientRect();
+            onMouseMoveX = event.clientX - canv.left;
+            onMouseMoveY = event.clientY - canv.top;
         }
     };
 
