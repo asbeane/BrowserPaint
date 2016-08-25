@@ -6,14 +6,10 @@
 ****************************************************/
 
 /***** Include *******/
-//var bootstrap = require('bootstrap');
 
 /************************TODO's *******************************
  *  Text Box
  *  Incorporate
- *
- *
- *
 /************************MAIN AREA****************************/
 $(document).ready(function() {
     var canvas                = document.getElementById("canvas");
@@ -41,17 +37,13 @@ $(document).ready(function() {
     var eraserTruth = false;
     var pixelState;
 
-    //var open = false;
-
     function setColor(event) {
-        var color = String(choice.color);
         var canv = canvas.getBoundingClientRect();
         var x = event.clientX - canv.left;
         var y = event.clientY - canv.top;
         var pixels = ctx.getImageData(x, y, 1, 1).data;
         var color = '#' + String(choice.color);
 
-        //var convertedColor = convertRGBToHex(pixels[0], pixels[1], pixels[3]);
         var convertedColor = ctx.getImageData(x, y, 1, 1).data;
         console.log($.xcolor.distance(color, convertedColor));
         if ($.xcolor.distance(color, convertedColor) <= 100) {
@@ -60,29 +52,23 @@ $(document).ready(function() {
         else {
             return $.xcolor.additive(color, convertRGBToHex(pixels[0], pixels[1], pixels[3])).getHex();
         }
-        color = color.toUpperCase();
     }
 
     save.addEventListener("click", function () {
-        //ctx.save();
         pixelState = ctx.getImageData(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }, false);
 
     restore.addEventListener("click", function () {
-        //ctx.restore();
         ctx.fillStyle = "white";
         ctx.fillRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
         ctx.putImageData(pixelState, 0, 0);
     }, false);
 
     fill.addEventListener("click", function () {
-        //ctx.globalAlpha = 1.0;
         var color = String(choice.color);
-        var canv = canvas.getBoundingClientRect();
         color = color.toUpperCase();
         ctx.fillStyle = "#" + color;
         ctx.fillRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-        //ctx.globalAlpha = 0.1;
     }, false);
 
     squarebrush.addEventListener("click", function () {
@@ -90,7 +76,7 @@ $(document).ready(function() {
         eraserTruth = false;
         ctx.lineWidth = 10;
         ctx.lineCap = "square";
-    }, false)
+    }, false);
 
     roundbrush.addEventListener("click", function () {
         drawRectangle = false;
@@ -154,7 +140,7 @@ $(document).ready(function() {
         }
     };
 
-    canvas.onmouseup = function (event) {
+    canvas.onmouseup = function () {
         paintOnCanvas = false;
         if (drawRectangle && drawRectangleOnCanvas)
         {
